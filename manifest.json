@@ -1,8 +1,8 @@
 {
   "manifest_version": 2,
 
-  "name": "Steam Gallery",
-  "description": "Image gallery previews in steam search",
+  "name": "Screenshot Preview",
+  "description": "Screenshot gallery previews in Steam search",
   "version": "0.0.2",
   "minimum_chrome_version": "52.0.0",
 
@@ -17,7 +17,6 @@
         "https://store.steampowered.com/search/*"
       ],
       "js": [
-        "jquery-3.1.1.min.js",
         "steam-gallery.js"
       ],
       "run_at": "document_end"
@@ -25,6 +24,6 @@
   ],
 
   "browser_action": {
-    "default_title": "Steam Gallery"
+    "default_title": "Screenshot Preview"
   }
 }

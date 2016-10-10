@@ -30,15 +30,13 @@ class Game {
     }
 
     getScreenshots() {
-        return new Promise(resolve => {
-            $.get(this.el.href, data => {
-                let container = document.createElement('div');
-                container.innerHTML = data;
-                let images = container.querySelectorAll('.highlight_strip_screenshot > img');
-                let screens = [];
-                images.forEach(img => screens.push(img.src));
-                resolve(screens);
-            });
+        return getHtml().then(html => {
+            let container = document.createElement('div');
+            container.innerHTML = html;
+            let images = container.querySelectorAll('.highlight_strip_screenshot > img');
+            let screens = [];
+            images.forEach(img => screens.push(img.src));
+            return screens;
         });
     }
 
@@ -62,6 +60,21 @@ class Game {
             this.el.setAttribute('has-gallery', 'true');
         });
     }
+}
+
+
+function getHtml() {
+    return new Promise(resolve => {
+        let xmlHttp = new XMLHttpRequest();
+        xmlHttp.onreadystatechange = () => {
+            if (xmlHttp.readyState !== 4 || xmlHttp.status !== 200) {
+                return;
+            }
+            resolve(xmlHttp.responseText);
+        };
+        xmlHttp.open("GET", this.el.href, true); // true for asynchronous
+        xmlHttp.send(null);
+    });
 }
 
 
