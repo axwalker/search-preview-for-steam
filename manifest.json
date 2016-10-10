@@ -3,7 +3,7 @@
 
   "name": "Screenshot Gallery Preview",
   "description": "Screenshot gallery previews in Steam search",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "minimum_chrome_version": "52.0.0",
 
   "icons": {

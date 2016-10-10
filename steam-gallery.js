@@ -30,7 +30,7 @@ class Game {
     }
 
     getScreenshots() {
-        return getHtml().then(html => {
+        return getHtml(this.el.href).then(html => {
             let container = document.createElement('div');
             container.innerHTML = html;
             let images = container.querySelectorAll('.highlight_strip_screenshot > img');
@@ -63,7 +63,7 @@ class Game {
 }
 
 
-function getHtml() {
+function getHtml(url) {
     return new Promise(resolve => {
         let xmlHttp = new XMLHttpRequest();
         xmlHttp.onreadystatechange = () => {
@@ -72,7 +72,7 @@ function getHtml() {
             }
             resolve(xmlHttp.responseText);
         };
-        xmlHttp.open("GET", this.el.href, true); // true for asynchronous
+        xmlHttp.open("GET", url, true); // true for asynchronous
         xmlHttp.send(null);
     });
 }
