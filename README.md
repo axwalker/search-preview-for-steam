@@ -1,6 +1,6 @@
 View screenshots for games within the Steam search page with this extension. Go to the [Chrome store](coming soon...) to install.
 
-![screenshot](/images/screenshot.png?raw=true)
+![screenshot](/examples/screenshot.png?raw=true)
 
 ## Known issues
 
