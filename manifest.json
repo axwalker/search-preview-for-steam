@@ -1,0 +1,30 @@
+{
+  "manifest_version": 2,
+
+  "name": "Steam Gallery",
+  "description": "Image gallery previews in steam search",
+  "version": "0.0.2",
+  "minimum_chrome_version": "52.0.0",
+
+  "icons": {
+    "128": "images/icon_128.png"
+  },
+
+  "content_scripts": [
+    {
+      "matches": [
+        "http://store.steampowered.com/search/*",
+        "https://store.steampowered.com/search/*"
+      ],
+      "js": [
+        "jquery-3.1.1.min.js",
+        "steam-gallery.js"
+      ],
+      "run_at": "document_end"
+    }
+  ],
+
+  "browser_action": {
+    "default_title": "Steam Gallery"
+  }
+}
