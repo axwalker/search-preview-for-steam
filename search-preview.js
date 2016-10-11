@@ -7,19 +7,21 @@ class Game {
     }
 
     static appendScreenshotsToAllGames(listenForNewGames) {
-        let games = Game.gamesFromPage();
-        games.forEach(g => g.appendScreenshots());
+        let appendScreenshots = () => {
+            let games = Game.gamesFromPage();
+            games.forEach(g => g.appendScreenshots());
+        };
+        appendScreenshots();
 
         if (!listenForNewGames) {
             return;
         }
 
-        let observer = new WebKitMutationObserver(() => {
-            let games = Game.gamesFromPage();
-            games.forEach(g => g.appendScreenshots());
-        });
+        let container = document.getElementById(`${SEARCH_RESULT_CONTAINER}`);
+        let observer = new WebKitMutationObserver(appendScreenshots);
+        observer.observe(container, { childList: true });
+        observer.observe(container.parentNode, { childList: true });
 
-        observer.observe(document.getElementById(`${SEARCH_RESULT_CONTAINER}`), { childList: true });
     }
 
     static gamesFromPage() {
@@ -50,7 +52,7 @@ class Game {
                 return;
             }
             let images = document.createElement('div');
-            images.style.background = '#465668';
+            images.style.background = '#2a3f5a';
             images.style.margin = '10px';
             images.style.marginBottom = '30px';
             images.innerHTML = srcs
