@@ -1,34 +1,32 @@
+declare var WebKitMutationObserver: any;
+
+
 const SEARCH_RESULT_CONTAINER = 'search_result_container';
 
 
-class Game {
+class GameContainer {
+    el: HTMLAnchorElement;
+
     constructor(el) {
         this.el = el;
     }
 
-    static appendScreenshotsToAllGames(listenForNewGames) {
+    static appendScreenshotsToAllGames() {
         let appendScreenshots = () => {
-            let games = Game.gamesFromPage();
+            let games = GameContainer.gamesFromPage();
             games.forEach(g => g.appendScreenshots());
         };
         appendScreenshots();
-
-        if (!listenForNewGames) {
-            return;
-        }
 
         let container = document.getElementById(`${SEARCH_RESULT_CONTAINER}`);
         let observer = new WebKitMutationObserver(appendScreenshots);
         observer.observe(container, { childList: true });
         observer.observe(container.parentNode, { childList: true });
-
     }
 
-    static gamesFromPage() {
-        let gameAnchors = document.querySelectorAll(`#${SEARCH_RESULT_CONTAINER} > div > a`);
-        let games = [];
-        gameAnchors.forEach(el => games.push(new Game(el)));
-        return games;
+    static gamesFromPage(): GameContainer[] {
+        let anchors = document.querySelectorAll(`#${SEARCH_RESULT_CONTAINER} > div > a`);
+        return [].slice.call(anchors).map(el => new GameContainer(el));
     }
 
     getScreenshots() {
@@ -36,9 +34,7 @@ class Game {
             let container = document.createElement('div');
             container.innerHTML = html;
             let images = container.querySelectorAll('.highlight_strip_screenshot > img');
-            let screens = [];
-            images.forEach(img => screens.push(img.src));
-            return screens;
+            return [].slice.call(images).map(img => img.src);
         });
     }
 
@@ -65,7 +61,7 @@ class Game {
 }
 
 
-function getHtml(url) {
+function getHtml(url): Promise<string> {
     return new Promise(resolve => {
         let xmlHttp = new XMLHttpRequest();
         xmlHttp.onreadystatechange = () => {
@@ -80,5 +76,4 @@ function getHtml(url) {
 }
 
 
-let andListenForNewGames = true;
-Game.appendScreenshotsToAllGames(andListenForNewGames);
+GameContainer.appendScreenshotsToAllGames();
