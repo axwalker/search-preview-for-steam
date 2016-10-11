@@ -1,2 +1,4 @@
 .idea/
 *.zip
+*.js
+*.js.map
