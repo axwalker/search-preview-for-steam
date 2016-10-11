@@ -10,4 +10,5 @@ View screenshots for games within the Steam search page with this extension. Go 
 ## Coming soon
 
 - Game videos included in preview.
+- Show description and review score in preview.
 - Option to only show screenshot previews on hover.

@@ -1,9 +1,9 @@
 {
   "manifest_version": 2,
 
-  "name": "Screenshot Gallery Preview",
+  "name": "Search Preview for Steam",
   "description": "Screenshot gallery previews in Steam search",
-  "version": "0.0.4",
+  "version": "0.0.6",
   "minimum_chrome_version": "52.0.0",
 
   "icons": {
@@ -17,13 +17,13 @@
         "https://store.steampowered.com/search/*"
       ],
       "js": [
-        "steam-gallery.js"
+        "search-preview.js"
       ],
       "run_at": "document_end"
     }
   ],
 
   "browser_action": {
-    "default_title": "Screenshot Gallery Preview"
+    "default_title": "Search Preview for Steam"
   }
 }

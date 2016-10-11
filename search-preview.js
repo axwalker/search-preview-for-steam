@@ -72,7 +72,7 @@ function getHtml(url) {
             }
             resolve(xmlHttp.responseText);
         };
-        xmlHttp.open("GET", url, true); // true for asynchronous
+        xmlHttp.open('GET', url, true);
         xmlHttp.send(null);
     });
 }
