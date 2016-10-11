@@ -44,15 +44,17 @@ class GameContainer {
                 return;
             }
             let description = descriptionContainer.textContent.trim();
+            let reviewDescription = container.querySelector('.responsive_reviewdesc').textContent.trim();
             let images = container.querySelectorAll('.highlight_strip_screenshot > img');
             let screenshots = [].slice.call(images).map(img => img.src);
-            return { description, screenshots };
+            return { description, reviewDescription, screenshots };
         });
     }
 }
 
 interface GameDetails {
     description: string;
+    reviewDescription: string;
     screenshots: string[];
 }
 
@@ -83,22 +85,43 @@ styles.innerHTML = `
     .ssp-description {
         width: ${DESCRIPTION_WIDTH};
     }
+    .muted { color: #aaa; }
+    .positive { color: #90EE90; }
+    .neutral { color: #FFA500; }
+    .negative { color: #FF5050; }
 `;
 document.head.appendChild(styles);
 
 function preview(details: GameDetails) {
     let preview = document.createElement('div');
     let screenshots = screenshotImages(details.screenshots);
+    let review = reviewScore(details.reviewDescription);
     preview.className = 'ssp-container';
     preview.innerHTML = `
         <div class="ssp-item ssp-screenshots">${screenshots}</div>
-        <div class="ssp-item ssp-description">${details.description}</div>
+        <div class="ssp-item ssp-description">
+            <p>${details.description}</p>
+            <br>
+            ${review}
+        </div>
     `;
     return preview;
 }
 
 function screenshotImages(srcs: string[]): string {
     return srcs.map(s => `<img src=${s}>`).join(' ');
+}
+
+function reviewScore(reviewDescription: string): string {
+    let [_, scoreString, count] = reviewDescription.match(/(\d+)% of the (\d+[\d,]*)/);
+    let score = parseFloat(scoreString);
+    let ratingBracket =
+        score >= 75 ? 'positive' :
+        score >= 55 ? 'neutral' :
+        'negative';
+    return `<p class="muted">
+        <span class="${ratingBracket}">${score}%</span> (${count})
+    </p>`;
 }
 
 
