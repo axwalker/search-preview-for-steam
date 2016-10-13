@@ -1,9 +1,12 @@
 import * as db from './db';
-import * as steam from './steam';
+import { SteamResult } from './steam';
 import * as template from './templates';
 
 
 (async () => {
     document.head.appendChild(template.styles);
-    steam.appendPreviewToAllGames(await db.getMode());
+    let mode = await db.getMode();
+    SteamResult.appendPreviewToAll(mode);
+    SteamResult.newResults.add(() => SteamResult.appendPreviewToAll(mode));
+    SteamResult.listenForNewResults();
 })();

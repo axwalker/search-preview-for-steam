@@ -11,7 +11,7 @@ const MARGIN_BETWEEN_GAMES = '30px';
 
 export const styles = document.createElement('style');
 styles.innerHTML = `
-    div:hover > .ssp-container {
+    a:hover + .ssp-container, .ssp-container:hover {
         opacity: 1;
         height: auto;
     }
@@ -53,7 +53,7 @@ export function preview(game: Game, mode: db.PREVIEW_MODE): HTMLDivElement {
     let review = reviewScore(game.reviewDescription);
     preview.className = `
         ssp-container
-        ${mode === db.PREVIEW_MODE.HOVER_ONLY && 'ssp-hover-only'}
+        ${mode === db.PREVIEW_MODE.HOVER_ONLY ? 'ssp-hover-only' : ''}
     `;
     preview.innerHTML = `
         <div class="ssp-item ssp-screenshots">${screenshots}</div>

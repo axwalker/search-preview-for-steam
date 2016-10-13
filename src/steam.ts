@@ -12,13 +12,33 @@ export interface Game {
 }
 
 
-class SteamResult {
+interface GameAnchorElement extends HTMLAnchorElement {
+    previewAdded?: boolean;
+    hasUngettableHref?: boolean;
+}
+
+
+export class SteamResult {
+    static newResults: util.Signal<any> = new util.Signal<any>();
+
     static all(): SteamResult[] {
         const anchors = document.querySelectorAll(`#${searchResultContainerId} > div > a`);
         return [].slice.call(anchors).map(a => new SteamResult(a));
     }
 
-    constructor(private el: HTMLAnchorElement) {}
+    static listenForNewResults() {
+        let container = document.getElementById(searchResultContainerId);
+        let observer = new WebKitMutationObserver(() => this.newResults.dispatch());
+        observer.observe(container, { childList: true });
+        observer.observe(container.parentNode, { childList: true });
+    }
+
+    static appendPreviewToAll(mode: db.PREVIEW_MODE) {
+        let steamResults = SteamResult.all();
+        steamResults.forEach(sr => sr.appendPreview(mode));
+    }
+
+    constructor(private el: GameAnchorElement) {}
 
     async game(): Promise<Game> {
         let html = await util.getHtml(this.el.href);
@@ -36,32 +56,22 @@ class SteamResult {
     }
 
     async appendPreview(mode: db.PREVIEW_MODE): Promise<void> {
-        if (this.el.getAttribute('has-gallery')) {
+        let doesNotNeedPreview = this.el.hasUngettableHref || this.hasPreview();
+        if (doesNotNeedPreview) {
             return;
         }
-        this.el.setAttribute('has-gallery', 'true');
 
         let game = await this.game();
         if (!game) {
+            this.el.hasUngettableHref = true;
             return;
         }
-        let container = document.createElement('div');
-        this.el.parentNode.insertBefore(container, this.el.nextSibling);
-        container.appendChild(this.el);
-        container.appendChild(await templates.preview(game, mode));
+        let preview = await templates.preview(game, mode);
+        this.el.parentNode.insertBefore(preview, this.el.nextSibling);
+        this.el.previewAdded = true;
     }
-}
 
-
-export function appendPreviewToAllGames(mode: db.PREVIEW_MODE): void {
-    let appendAllPreviews = () => {
-        let steamResults = SteamResult.all();
-        steamResults.forEach(sr => sr.appendPreview(mode));
-    };
-    appendAllPreviews();
-
-    let container = document.getElementById(searchResultContainerId);
-    let observer = new WebKitMutationObserver(appendAllPreviews);
-    observer.observe(container, { childList: true });
-    observer.observe(container.parentNode, { childList: true });
+    hasPreview() {
+        return this.el.previewAdded && (<HTMLElement>this.el.nextSibling).tagName === 'DIV';
+    }
 }

@@ -11,3 +11,16 @@ export function getHtml(url): Promise<string> {
         xmlHttp.send(null);
     });
 }
+
+
+export class Signal<T> {
+    handlers: ((T) => any)[] = [];
+
+    add(f: (t: T) => any) {
+        this.handlers.push(f);
+    }
+
+    dispatch(t?: T) {
+        return Promise.all(this.handlers.map(f => Promise.resolve(f(t))));
+    }
+}
