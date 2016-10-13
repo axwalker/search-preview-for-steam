@@ -3,7 +3,7 @@
 
   "name": "Search Preview for Steam",
   "description": "Screenshot gallery previews in Steam search",
-  "version": "0.0.9",
+  "version": "0.1.0",
   "minimum_chrome_version": "52.0.0",
 
   "icons": {
@@ -21,7 +21,7 @@
         "https://store.steampowered.com/search/*"
       ],
       "js": [
-        "search-preview.js"
+        "content.js"
       ],
       "run_at": "document_end"
     }

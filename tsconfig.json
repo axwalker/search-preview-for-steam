@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "target": "es6",
+    "module": "commonjs",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "sourceMap": true,
+    "skipLibCheck": true
+  },
+  "include": [
+    "node_modules/@types/**/*",
+    "src/**/*",
+    "custom_typings/**/*"
+  ],
+  "exclude": []
+}
