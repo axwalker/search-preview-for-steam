@@ -3,12 +3,16 @@
 
   "name": "Search Preview for Steam",
   "description": "Screenshot gallery previews in Steam search",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "minimum_chrome_version": "52.0.0",
 
   "icons": {
     "128": "images/icon_128.png"
   },
+
+  "permissions": [
+    "storage"
+  ],
 
   "content_scripts": [
     {
@@ -24,6 +28,7 @@
   ],
 
   "browser_action": {
-    "default_title": "Search Preview for Steam"
+    "default_title": "Search Preview for Steam",
+    "default_popup": "popup.html"
   }
 }

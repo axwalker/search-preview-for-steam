@@ -1,3 +1,11 @@
+/* SETTINGS */
+enum MODE {
+    ALWAYS_ON,
+    HOVER_ONLY,
+}
+
+
+/* APP */
 const SEARCH_RESULT_CONTAINER = 'search_result_container';
 
 class GameContainer {
@@ -21,34 +29,35 @@ class GameContainer {
         return [].slice.call(anchors).map(el => new GameContainer(el));
     }
 
-    appendPreview() {
+    async appendPreview(): Promise<void> {
         if (this.el.getAttribute('has-gallery')) {
             return;
         }
         this.el.setAttribute('has-gallery', 'true');
 
-        return this.getGameDetails().then(details => {
-            if (!details) {
-                return;
-            }
-            this.el.parentNode.insertBefore(preview(details), this.el.nextSibling);
-        });
+        let details = await this.getGameDetails();
+        if (!details) {
+            return;
+        }
+        let container = document.createElement('div');
+        this.el.parentNode.insertBefore(container, this.el.nextSibling);
+        container.appendChild(this.el);
+        container.appendChild(await preview(details));
     }
 
-    getGameDetails(): Promise<GameDetails> {
-        return getHtml(this.el.href).then(html => {
-            let container = document.createElement('div');
-            container.innerHTML = html;
-            let descriptionContainer = container.querySelector('.game_description_snippet');
-            if (!descriptionContainer) {
-                return;
-            }
-            let description = descriptionContainer.textContent.trim();
-            let reviewDescription = container.querySelector('.responsive_reviewdesc').textContent.trim();
-            let images = container.querySelectorAll('.highlight_strip_screenshot > img');
-            let screenshots = [].slice.call(images).map(img => img.src);
-            return { description, reviewDescription, screenshots };
-        });
+    async getGameDetails(): Promise<GameDetails> {
+        let html = await getHtml(this.el.href);
+        let container = document.createElement('div');
+        container.innerHTML = html;
+        let descriptionContainer = container.querySelector('.game_description_snippet');
+        if (!descriptionContainer) {
+            return;
+        }
+        let description = descriptionContainer.textContent.trim();
+        let reviewDescription = container.querySelector('.responsive_reviewdesc').textContent.trim();
+        let images = container.querySelectorAll('.highlight_strip_screenshot > img');
+        let screenshots = [].slice.call(images).map(img => img.src);
+        return { description, reviewDescription, screenshots };
     }
 }
 
@@ -68,15 +77,27 @@ const MARGIN_BETWEEN_GAMES = '30px';
 
 let styles = document.createElement('style');
 styles.innerHTML = `
+    div:hover > .ssp-container {
+        opacity: 1;
+        height: auto;
+    }
     .ssp-container {
         background-color: ${BG_COLOR};
         padding: ${PADDING};
         margin-top: -5px;
         margin-bottom: ${MARGIN_BETWEEN_GAMES};
     }
+    .ssp-hover-only {
+        transition: opacity 0.5s ease-in;
+        opacity: 0; 
+        height: 0;
+        overflow: hidden;
+        padding: 0px;
+        margin-bottom: 0px;
+    }
     .ssp-item {
         vertical-align: top;
-        padding: 5px;
+        padding: ${PADDING};
         display: inline-block;
     }
     .ssp-screenshots {
@@ -92,11 +113,12 @@ styles.innerHTML = `
 `;
 document.head.appendChild(styles);
 
-function preview(details: GameDetails) {
+async function preview(details: GameDetails): Promise<HTMLDivElement> {
     let preview = document.createElement('div');
     let screenshots = screenshotImages(details.screenshots);
     let review = reviewScore(details.reviewDescription);
-    preview.className = 'ssp-container';
+    let mode = await getMode();
+    preview.className = `ssp-container ${mode === MODE.HOVER_ONLY ? 'ssp-hover-only': ''}`;
     preview.innerHTML = `
         <div class="ssp-item ssp-screenshots">${screenshots}</div>
         <div class="ssp-item ssp-description">
@@ -113,15 +135,17 @@ function screenshotImages(srcs: string[]): string {
 }
 
 function reviewScore(reviewDescription: string): string {
-    let [_, scoreString, count] = reviewDescription.match(/(\d+)% of the (\d+[\d,]*)/);
+    let pattern = /(\d+)% of the (\d+[\d,]*)/;
+    let [_, scoreString, count] = reviewDescription.match(pattern);
     let score = parseFloat(scoreString);
     let ratingBracket =
         score >= 75 ? 'positive' :
         score >= 55 ? 'neutral' :
         'negative';
     return `<p class="muted">
+        <span>Recent reviews:</span><br>
         <span class="${ratingBracket}">${score}%</span> (${count})
-    </p>`;
+    </span>`;
 }
 
 
@@ -140,9 +164,16 @@ function getHtml(url): Promise<string> {
     });
 }
 
+function getMode(): Promise<MODE> {
+    return new Promise(resolve => {
+        chrome.storage.sync.get(['mode'], ({mode}) => resolve(mode));
+    });
+}
+
 
 /* TS DECLARATIONS */
 declare var WebKitMutationObserver: any;
+declare var chrome: any;
 
 
 /* MAIN */
