@@ -10,3 +10,21 @@ View screenshots for games within the Steam search page with this extension. Go 
 ## Coming soon
 
 - Game videos included in preview.
+
+## Install
+
+`npm install`
+
+## Build
+
+`npm run build`
+
+Then you can load the unpacked extension that is in the newly created `build` directory.
+
+Alternatively, use `npm run watch` if you want this build to run any time file changes are detected.
+
+## Deploy
+
+`npm run package`
+
+Produces a zip file that can be uploaded to the Chrome Web Store.
