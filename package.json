@@ -1,12 +1,13 @@
 {
   "name": "search-preview-for-steam",
   "version": "0.0.9",
-  "description": "Chrome extension for previewing games on Steam store search page",
+  "description": "Browser extension for previewing games on Steam store search page",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack",
-    "package": "webpack && zip -r search-preview-for-steam.zip build/",
-    "watch": "webpack --watch"
+    "package": "webpack && (cd build && zip -r ../search-preview-for-steam.zip *)",
+    "watch": "webpack --watch",
+    "zip-src": "(cd src && zip -r ../src.zip *)"
   },
   "repository": {
     "type": "git",
