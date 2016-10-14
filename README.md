@@ -1,4 +1,10 @@
-View screenshots for games within the Steam search page with this extension. Go to the [Chrome store](coming soon...) to install.
+View screenshots for games within the Steam search page with this browser extension.
+
+# Install
+
+- [Chrome Web Store](https://chrome.google.com/webstore/detail/search-preview-for-steam/nlhhngcbflcbkhnljkcmagnfkeinngnh)
+- Firefox - coming soon
+- Opera - coming soon
 
 ![screenshot](/examples/screenshot.png?raw=true)
 
@@ -11,7 +17,10 @@ View screenshots for games within the Steam search page with this extension. Go 
 
 - Game videos included in preview.
 
-## Install
+
+# Building from source
+
+## Setup
 
 `npm install`
 
@@ -27,4 +36,4 @@ Alternatively, use `npm run watch` if you want this build to run any time file c
 
 `npm run package`
 
-Produces a zip file that can be uploaded to the Chrome Web Store.
+Produces a zip file that can be uploaded to Chrome, Firefox or Opera.
