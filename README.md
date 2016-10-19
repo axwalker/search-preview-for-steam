@@ -4,7 +4,7 @@ View screenshots for games within the Steam search page with this browser extens
 
 - [Chrome Web Store](https://chrome.google.com/webstore/detail/search-preview-for-steam/nlhhngcbflcbkhnljkcmagnfkeinngnh)
 - Firefox - coming soon
-- Opera - coming soon
+- [Opera](https://addons.opera.com/en-gb/extensions/details/search-preview-for-steam/?display=en)
 
 ![screenshot](/examples/screenshot.png?raw=true)
 
