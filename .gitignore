@@ -1,7 +1,5 @@
 .idea/
 *.zip
-*.js
-*.js.map
 
 build/
 node_modules/
